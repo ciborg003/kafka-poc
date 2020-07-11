@@ -1,0 +1,15 @@
+server:
+  port: 9999
+
+kafka:
+  groupId: A
+  bootstrapAddress: localhost:9092
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:mobilesystem
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  kafka:
+    bootstrap-servers: localhost:9092
