@@ -8,7 +8,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,7 @@ import org.springframework.kafka.support.serializer.JsonSerde;
 import java.util.Properties;
 import java.util.UUID;
 
-import static com.poc.kafka.calls.config.KafkaConfigs.CALL_REPORT_TOPIC;
+import static com.poc.kafka.calls.config.KafkaConfig.CALL_REPORT_TOPIC;
 
 @Configuration
 public class StreamsConfiguration {
@@ -47,7 +46,6 @@ public class StreamsConfiguration {
     @Bean
     public KafkaStreams streams(JsonSerde<CallReport> jsonSerde) {
         StreamsBuilder builder = new StreamsBuilder();
-
         KGroupedStream<Contact, Long> groupedByContactStream = builder.stream(CALL_REPORT_TOPIC, Consumed.with(Serdes.String(), jsonSerde))
                 .map((key, callReport) -> new KeyValue<>(callReport.getFrom(), callReport.getDurability()))
                 .groupByKey();

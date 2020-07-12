@@ -10,19 +10,19 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
-import java.sql.Driver;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.poc.kafka.calls.config.KafkaConfigs.CALL_REPORT_TOPIC;
+import static com.poc.kafka.calls.config.KafkaConfig.CALL_REPORT_TOPIC;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "com.poc.kafka.calls.config",
+        "com.poc.kafka.calls.driver"
+})
 public class DataDriverApp implements ApplicationRunner {
 
     @Value(value = "${kafka.bootstrapAddress}")
@@ -34,7 +34,7 @@ public class DataDriverApp implements ApplicationRunner {
 
         while (true) {
             CallReport callReport = generateCallReport();
-            kafkaProducer.send(new ProducerRecord<>(CALL_REPORT_TOPIC, callReport));
+            kafkaProducer.send(new ProducerRecord<>(CALL_REPORT_TOPIC, callReport.getFrom().getMobilePhone(), callReport));
 
             Thread.sleep(1000);
         }

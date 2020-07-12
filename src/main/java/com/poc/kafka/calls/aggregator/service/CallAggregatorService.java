@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static com.poc.kafka.calls.aggregator.config.StreamsConfiguration.AGGREGATED_CALL_REPORT_TOPIC_STORE;
 import static com.poc.kafka.calls.aggregator.config.StreamsConfiguration.WINDOWED_CALL_REPORT_TOPIC_STORE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class CallAggregatorService {
 
     private final KafkaStreams streams;
 
-    @GetMapping("/aggregate")
+    @GetMapping(value = "/aggregate", produces = APPLICATION_JSON)
     public ResponseEntity<Map<Contact, Long>> getAggregatedTable() {
         ReadOnlyKeyValueStore<Contact, Long> store = streams.store(AGGREGATED_CALL_REPORT_TOPIC_STORE, QueryableStoreTypes.keyValueStore());
         KeyValueIterator<Contact, Long> iterator = store.all();
@@ -39,7 +40,7 @@ public class CallAggregatorService {
         return ResponseEntity.ok(responseTable);
     }
 
-    @GetMapping("/window")
+    @GetMapping(value = "/window", produces = APPLICATION_JSON)
     public ResponseEntity<Map<Contact, Long>> getWindowedTable() {
         ReadOnlyWindowStore<Contact, Long> store = streams.store(WINDOWED_CALL_REPORT_TOPIC_STORE, QueryableStoreTypes.windowStore());
         KeyValueIterator<Windowed<Contact>, Long> iterator = store.all();
