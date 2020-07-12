@@ -10,15 +10,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Entity
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "mobilePhone")
 public class Contact {
 
-  @Id
-  private UUID id = UUID.randomUUID();
   private String mobilePhone;
+  private String name;
 
-  public Contact(String mobilePhone) {
+  public Contact(String mobilePhone, String name) {
     this.mobilePhone = mobilePhone;
+    this.name = name;
   }
 }
